@@ -9,18 +9,29 @@
         body {
             margin: 0; padding: 0; background-color: #000; color: white;
             min-height: 100vh; font-family: 'Poppins', sans-serif; overflow-x: hidden;
-            display: flex; justify-content: center; align-items: center; user-select: none;
+            user-select: none;
         }
 
-        /* --- SCREEN 1: THE SCANNER --- */
-        #lock-screen { text-align: center; z-index: 100; transition: opacity 0.8s; width: 100%; position: fixed; }
-        .scanner-box {
-            position: relative; width: 120px; height: 140px; margin: 20px auto;
-            border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05); display: flex;
-            justify-content: center; align-items: center; overflow: hidden;
+        /* --- STAGE 1: PINK DOOR & SCANNER --- */
+        #door-container {
+            position: fixed; width: 100%; height: 100%; z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+            background-color: #ff85a1; transition: all 1.5s ease-in-out;
+            perspective: 1000px;
         }
-        .fingerprint { font-size: 80px; opacity: 0.3; transition: 0.3s; filter: grayscale(100%); }
+        .door-half {
+            position: absolute; width: 50%; height: 100%; background-color: #ff4d6d;
+            border: 2px solid #a41638; transition: transform 1.5s ease-in-out;
+        }
+        .left-door { left: 0; transform-origin: left; }
+        .right-door { right: 0; transform-origin: right; }
+        
+        .scanner-box {
+            position: absolute; width: 120px; height: 140px; 
+            border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3); display: flex;
+            justify-content: center; align-items: center; overflow: hidden; z-index: 1001;
+        }
         .scan-line {
             position: absolute; top: 0; left: 0; width: 100%; height: 4px;
             background: #00ffcc; box-shadow: 0 0 15px #00ffcc;
@@ -28,187 +39,178 @@
         }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* --- SCREEN 2: PROPOSAL & GALLERY --- */
-        #proposal-screen {
-            display: none; width: 100%; min-height: 100vh;
-            background: linear-gradient(135deg, #2b0c1e 0%, #1a0505 100%);
-            flex-direction: column; justify-content: flex-start; align-items: center; 
-            opacity: 0; transition: opacity 1.5s; padding: 40px 0;
+        /* --- STAGE 2: THE GIFT BOX --- */
+        #gift-screen {
+            display: none; height: 100vh; width: 100%; flex-direction: column;
+            justify-content: center; align-items: center; background: #2b0c1e;
         }
-
-        /* --- MAIN SPLIT LAYOUT --- */
-        .content-wrapper {
-            display: flex; flex-direction: row; align-items: center;
-            justify-content: center; width: 90%; max-width: 1000px;
-            gap: 30px; opacity: 0; transition: 1s ease; margin-top: 20px;
-        }
-
-        .video-container {
-            flex: 1.2; max-width: 450px; border-radius: 20px;
-            overflow: hidden; box-shadow: 0 0 30px rgba(255, 77, 109, 0.4);
-            border: 3px solid #ff4d6d;
-        }
-        
-        video { width: 100%; display: block; }
-        .proposal-container { flex: 1; text-align: center; }
-
         .box-container {
-            position: relative; width: 160px; height: 160px; cursor: pointer;
-            animation: float 3s ease-in-out infinite; margin: 25vh auto; z-index: 50;
+            position: relative; width: 250px; height: 250px; cursor: pointer;
+            animation: float 3s ease-in-out infinite;
         }
         .box-lid {
-            position: absolute; top: 0; left: 0; width: 100%; height: 45px;
+            position: absolute; top: 0; width: 100%; height: 60px;
             background: #ff4d6d; border-radius: 10px 10px 0 0; z-index: 2;
-            transition: all 0.8s ease; border-bottom: 4px solid #a41638;
+            transition: 0.8s; border-bottom: 5px solid #a41638;
         }
         .box-body {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 120px;
+            position: absolute; bottom: 0; width: 100%; height: 190px;
             background: #c9184a; border-radius: 0 0 10px 10px; z-index: 1;
         }
-        .ring {
-            position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            font-size: 55px; z-index: 0; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .box-container.open .box-lid { transform: translateY(-80px) rotate(-10deg); }
-        .box-container.open .ring { transform: translate(-50%, -50%) scale(1.5); top: -25px; z-index: 10; }
-
-        .final-message h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff4d6d; margin: 0; }
-        .buttons { margin-top: 25px; display: flex; justify-content: center; gap: 20px; align-items: center; }
-        
-        .yes-btn {
-            padding: 12px 30px; background: #25d366; color: white; border: none;
-            border-radius: 50px; cursor: pointer; font-weight: bold; text-decoration: none;
-            display: inline-block; transition: transform 0.2s;
-        }
-        .no-btn {
-            padding: 12px 30px; background: white; color: black; border: none;
-            border-radius: 50px; cursor: pointer; font-weight: bold;
+        .ribbon-text {
+            position: absolute; top: 50%; width: 100%; height: 40px;
+            background: #ffccd5; color: #a41638; display: flex;
+            justify-content: center; align-items: center; font-weight: bold;
+            font-size: 0.9rem; transform: translateY(-50%); z-index: 3;
         }
 
-        /* --- GHIBLI GALLERY --- */
-        .gallery-title { margin-top: 60px; font-family: 'Dancing Script', cursive; font-size: 2rem; color: #ffb3c1; }
+        /* --- STAGE 3: FULL SCREEN VIDEO --- */
+        #video-screen { display: none; width: 100%; height: 100vh; position: relative; }
+        .main-vid { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- STAGE 4: PHOTOS & BEACH PROMISE --- */
+        #scroll-content { display: none; padding: 40px 0; text-align: center; }
         .gallery {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px; margin-top: 20px; width: 90%; max-width: 900px; padding-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; width: 90%; margin: 20px auto;
         }
-        .gallery-img {
-            width: 100%; height: 180px; object-fit: cover;
-            border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s;
-        }
-        .gallery-img:hover { transform: scale(1.05); border-color: #ff4d6d; }
+        .gallery-img { width: 100%; border-radius: 15px; border: 3px solid #ff4d6d; }
 
-        @media (max-width: 768px) {
-            .content-wrapper { flex-direction: column; }
-            .box-container { margin: 35vh auto; }
+        .beach-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover; padding: 60px 20px; margin: 50px 0; border-radius: 20px;
         }
+        .beach-msg { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #fff; max-width: 800px; margin: 0 auto; }
 
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        /* Beach Video Container */
+        .beach-video-container {
+            width: 90%; max-width: 700px; margin: 30px auto; border-radius: 20px;
+            overflow: hidden; border: 4px solid #ff4d6d; box-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
+        }
+        .beach-vid { width: 100%; display: block; }
+
+        /* --- BUTTONS --- */
+        .btn-container { padding-bottom: 100px; margin-top: 50px; }
+        .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: transform 0.2s; }
+        .no-btn { padding: 15px 40px; background: white; color: black; border-radius: 50px; border: none; font-weight: bold; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     </style>
 </head>
 <body>
 
-    <div id="lock-screen">
-        <h2>IDENTIFICATION REQUIRED 🔒</h2>
+    <div id="door-container">
+        <div class="door-half left-door" id="leftDoor"></div>
+        <div class="door-half right-door" id="rightDoor"></div>
         <div class="scanner-box" id="scanner">
             <div class="scan-line" id="scanLine"></div>
-            <div class="fingerprint" id="fingerprint">🖐️</div>
+            <div class="fingerprint">🖐️</div>
         </div>
-        <div id="statusText">Hold finger to verify identity</div>
     </div>
 
-    <div id="proposal-screen">
-        <div class="box-container" id="mainBox" onclick="openBox()">
+    <div id="gift-screen">
+        <div class="box-container" onclick="openBox()">
             <div class="box-lid"></div>
-            <div class="box-body"></div>
-            <div class="ring">💍</div>
+            <div class="box-body">
+                <div class="ribbon-text">Gaurav Loves Mona</div>
+            </div>
+        </div>
+        <p style="margin-top: 20px; color: #ffccd5;">Tap to reveal the mystery...</p>
+    </div>
+
+    <div id="video-screen">
+        <video id="myVideo" class="main-vid" playsinline>
+            <source src="us.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div id="scroll-content">
+        <h2 class="beach-msg" style="margin-bottom: 40px;">Our Memories ❤️</h2>
+        <div class="gallery">
+            <img src="art1.jpg" class="gallery-img">
+            <img src="art2.jpg" class="gallery-img">
+            <img src="art3.jpg" class="gallery-img">
+            <img src="art4.jpg" class="gallery-img">
+            <img src="art5.jpg" class="gallery-img">
+            <img src="art6.jpg" class="gallery-img">
         </div>
 
-        <div class="content-wrapper" id="contentWrapper" style="display: none;">
-            <div class="video-container">
-                <video id="myVideo" loop playsinline>
-                    <source src="us.mp4" type="video/mp4">
+        <div class="beach-section">
+            <p class="beach-msg">
+                "Hey sweetheart, I know you've always dreamed of me proposing to you on a beautiful beach. 🌊<br><br>
+                I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment. 
+                I want to be at my absolute best when I finally look into your eyes on that shore. 
+                One day very soon, it won't just be a dream—it will be our reality. ❤️"
+            </p>
+            
+            <div class="beach-video-container">
+                <video id="beachVideo" class="beach-vid" controls loop muted playsinline>
+                    <source src="beach.mp4" type="video/mp4">
                 </video>
             </div>
-
-            <div class="proposal-container">
-                <div class="final-message">
-                    <h1>Mona, Will you be mine forever?</h1>
-                    <div class="buttons">
-                        <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20❤️" class="yes-btn" id="yesBtn">YES! 💖</a>
-                        <button class="no-btn" id="noBtn" onmouseover="moveNo()" onclick="moveNo()">No</button>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <div id="gallerySection" style="display: none; width: 100%; text-align: center;">
-            <div class="gallery-title">Our Ghibli Memories ✨</div>
-            <div class="gallery">
-                <img src="art1.jpg" class="gallery-img">
-                <img src="art2.jpg" class="gallery-img">
-                <img src="art3.jpg" class="gallery-img">
-                <img src="art4.jpg" class="gallery-img">
-                <img src="art5.jpg" class="gallery-img">
-                <img src="art6.jpg" class="gallery-img">
+        <div class="btn-container">
+            <h2 class="beach-msg">So, Mona... Will you be mine forever?</h2>
+            <div style="margin-top: 30px;">
+                <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20I%20will%20wait%20for%20our%20beach%20moment!%20🌊❤️" class="yes-btn" id="yesBtn">YES! 💖</a>
+                <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
             </div>
         </div>
     </div>
 
     <script>
         const scanner = document.getElementById('scanner');
-        const yesBtn = document.getElementById('yesBtn');
-        const video = document.getElementById('myVideo');
         let scanTimer;
         let yesScale = 1;
 
+        // 1. SCANNER & DOOR LOGIC
         function startScan(e) {
             e.preventDefault();
             document.getElementById('scanLine').style.display = 'block';
-            document.getElementById('fingerprint').style.opacity = '1';
-            scanTimer = setTimeout(unlock, 2000);
+            scanTimer = setTimeout(() => {
+                document.getElementById('leftDoor').style.transform = 'rotateY(-90deg)';
+                document.getElementById('rightDoor').style.transform = 'rotateY(90deg)';
+                scanner.style.display = 'none';
+                setTimeout(() => {
+                    document.getElementById('door-container').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('door-container').style.display = 'none';
+                        document.getElementById('gift-screen').style.display = 'flex';
+                    }, 1000);
+                }, 1500);
+            }, 2000);
         }
 
         function stopScan() {
             clearTimeout(scanTimer);
             document.getElementById('scanLine').style.display = 'none';
-            document.getElementById('fingerprint').style.opacity = '0.3';
         }
 
-        function unlock() {
-            document.getElementById('lock-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('lock-screen').style.display = 'none';
-                const ps = document.getElementById('proposal-screen');
-                ps.style.display = 'flex';
-                setTimeout(() => ps.style.opacity = '1', 100);
-            }, 800);
-        }
-
+        // 2. BOX OPENING & VIDEO
         function openBox() {
-            const box = document.getElementById('mainBox');
-            const wrapper = document.getElementById('contentWrapper');
-            const gallerySection = document.getElementById('gallerySection');
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('video-screen').style.display = 'block';
+            const vid = document.getElementById('myVideo');
+            vid.play();
             
-            if(!box.classList.contains('open')) {
-                box.classList.add('open');
-                setTimeout(() => {
-                    box.style.display = 'none'; 
-                    wrapper.style.display = 'flex';
-                    gallerySection.style.display = 'block';
-                    setTimeout(() => { wrapper.style.opacity = '1'; }, 50);
-                    video.play(); 
-                    document.body.style.overflowY = "auto"; // Enable scrolling
-                }, 800);
-            }
+            vid.onended = () => {
+                document.getElementById('scroll-content').style.display = 'block';
+                document.body.style.overflowY = "auto";
+                window.scrollBy({ top: 300, behavior: 'smooth' });
+                // Start playing the beach video when section appears
+                document.getElementById('beachVideo').play();
+            };
         }
 
+        // 3. MOVING BUTTON LOGIC
         function moveNo() {
             const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
             noBtn.style.position = 'fixed';
             noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            yesScale += 0.25;
+            yesScale += 0.3;
             yesBtn.style.transform = `scale(${yesScale})`;
         }
 
