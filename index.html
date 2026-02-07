@@ -18,16 +18,19 @@
         #door-container {
             position: fixed; width: 100%; height: 100%; z-index: 1000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background-color: #ff85a1; transition: all 1s ease-in-out;
+            background-color: #ff85a1; transition: all 1s ease-in-out; perspective: 1000px;
         }
-        .side-gif-container { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        .side-gif { width: 80px; height: 80px; border-radius: 50%; border: 2px solid white; }
+        .door-half { position: absolute; width: 50%; height: 100%; background-color: #ff4d6d; border: 2px solid #a41638; transition: transform 1.5s ease-in-out; }
+        .left-door { left: 0; transform-origin: left; }
+        .right-door { right: 0; transform-origin: right; }
+        
+        .scanner-gif { width: 150px; height: auto; margin-bottom: 20px; border-radius: 15px; }
 
         .scanner-box {
-            position: relative; width: 130px; height: 130px; border: 4px solid #fff; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2); display: flex; justify-content: center; align-items: center; overflow: hidden;
+            position: relative; width: 120px; height: 120px; border: 4px solid #fff; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2); display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1001;
         }
-        .heart-scanner { font-size: 55px; animation: beat 1s infinite alternate; }
+        .heart-scanner { font-size: 50px; animation: beat 1s infinite alternate; }
         @keyframes beat { from { transform: scale(1); } to { transform: scale(1.2); } }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: #00ffcc; animation: scanMove 1.5s linear infinite; display: none; }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
@@ -36,27 +39,33 @@
 
         /* --- STAGE 2: GIFT --- */
         #gift-screen { display: none; height: 100vh; width: 100%; flex-direction: column; justify-content: center; align-items: center; background: #fff0f5; }
-        .box-container { position: relative; width: 180px; height: 180px; cursor: pointer; animation: float 3s ease-in-out infinite; }
-        .box-lid { position: absolute; top: 0; width: 100%; height: 45px; background: #e63946; border-radius: 10px 10px 0 0; z-index: 2; border-bottom: 5px solid #a41638; }
-        .box-body { position: absolute; bottom: 0; width: 100%; height: 145px; background: #d62828; border-radius: 0 0 10px 10px; z-index: 1; }
-        .ribbon-text { position: absolute; top: 50%; width: 100%; height: 35px; background: #fff; color: #d62828; display: flex; justify-content: center; align-items: center; font-weight: bold; transform: translateY(-50%); z-index: 3; font-size: 0.8rem; }
+        .box-container { position: relative; width: 200px; height: 200px; cursor: pointer; animation: float 3s ease-in-out infinite; }
+        .box-lid { position: absolute; top: 0; width: 100%; height: 50px; background: #e63946; border-radius: 10px 10px 0 0; z-index: 2; border-bottom: 5px solid #a41638; }
+        .box-body { position: absolute; bottom: 0; width: 100%; height: 160px; background: #d62828; border-radius: 0 0 10px 10px; z-index: 1; }
+        .ribbon-text { position: absolute; top: 50%; width: 100%; height: 40px; background: #fff; color: #d62828; display: flex; justify-content: center; align-items: center; font-weight: bold; transform: translateY(-50%); z-index: 3; font-size: 0.8rem;}
 
         /* --- STAGE 3: CONTENT --- */
         #main-content-area { display: none; text-align: center; }
-        .video-box { width: 90%; max-width: 400px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 4px solid #ff4d6d; }
+        .video-box { width: 90%; max-width: 450px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 4px solid #ff4d6d; }
         video { width: 100%; display: block; }
 
-        /* NEW FULL-SIZE PHOTO GALLERY */
+        /* PERFECT PHOTO GRID */
+        .gallery-container { width: 95%; margin: 30px auto; text-align: center; }
+        .gallery-title { font-family: 'Dancing Script', cursive; font-size: 2.5rem; margin-bottom: 20px; }
         .gallery {
-            display: flex; flex-direction: column; 
-            gap: 20px; width: 90%; margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            padding: 10px;
         }
         .gallery-img { 
             width: 100%; 
-            height: auto; /* IMPORTANT: Displays full vertical image */
+            height: 200px; /* Fixed height for consistency */
+            object-fit: contain; /* Ensures the whole vertical image shows in the box */
             border-radius: 15px; 
             border: 3px solid #ff4d6d;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: #fff; /* Fills sides if image is thin */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .beach-section { background: rgba(255, 255, 255, 0.7); padding: 30px 15px; margin: 40px 10px; border-radius: 20px; border: 2px dashed #ff4d6d; }
@@ -76,60 +85,61 @@
     <div class="hearts-bg" id="heartsBg"></div>
 
     <div id="door-container">
-        <div class="side-gif-container">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzBucDkwNDlvdzdyeWtrZ2RjYjRxcHF6OGFnb2Y2anRlYjhxNGRicyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dYfnPQ8FXSZhe/giphy.gif" class="side-gif">
-            <div class="scanner-box" id="scanner">
-                <div class="scan-line" id="scanLine"></div>
-                <div class="heart-scanner">❤️</div>
-            </div>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzBucDkwNDlvdzdyeWtrZ2RjYjRxcHF6OGFnb2Y2anRlYjhxNGRicyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dYfnPQ8FXSZhe/giphy.gif" class="side-gif">
+        <div class="door-half left-door" id="leftDoor"></div>
+        <div class="door-half right-door" id="rightDoor"></div>
+        
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzBucDkwNDlvdzdyeWtrZ2RjYjRxcHF6OGFnb2Y2anRlYjhxNGRicyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dYfnPQ8FXSZhe/giphy.gif" class="scanner-gif">
+        
+        <div class="scanner-box" id="scanner">
+            <div class="scan-line" id="scanLine"></div>
+            <div class="heart-scanner">❤️</div>
         </div>
-        <p id="instruction" style="color: white; font-weight: bold; margin-top: 15px;">Verify your heart ❤️</p>
-        <button id="confirm-btn" onclick="openGiftScreen()">Identity Verified! Click to Continue ✅</button>
+        
+        <p id="instruction" style="color: white; font-weight: bold; margin-top: 15px; z-index: 1001;">Verify your heart ❤️</p>
+        
+        <button id="confirm-btn" onclick="openDoors()">Identity Verified! Click to Open Door ✅</button>
     </div>
 
     <div id="gift-screen">
-        <div class="side-gif-container">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjVxMDg4NG50ODNrdDFmb2dsZDZ2NmZlajg0cHR5dTdlcnphOHJ0YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wvYNSqBAMDVx8CEYkt/giphy.gif" class="side-gif">
-            <div class="box-container" onclick="openBox()">
-                <div class="box-lid"></div>
-                <div class="box-body"><div class="ribbon-text">Gaurav Loves Mona</div></div>
+        <div class="box-container" onclick="openBox()">
+            <div class="box-lid"></div>
+            <div class="box-body">
+                <div class="ribbon-text">Gaurav Loves Mona</div>
             </div>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjVxMDg4NG50ODNrdDFmb2dsZDZ2NmZlajg0cHR5dTdlcnphOHJ0YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wvYNSqBAMDVx8CEYkt/giphy.gif" class="side-gif">
         </div>
         <h2 style="font-family: 'Dancing Script'; margin-top: 20px;">Open your gift...</h2>
     </div>
 
     <div id="main-content-area">
-        <div class="video-box"><video id="myVideo" playsinline controls loop><source src="us.mp4" type="video/mp4"></video></div>
-        
-        <div id="scroll-content">
-            <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem;">Our Memories ❤️</h2>
-            
+        <div class="video-box">
+            <video id="myVideo" playsinline controls loop><source src="us.mp4" type="video/mp4"></video>
+        </div>
+
+        <div class="gallery-container">
+            <h2 class="gallery-title">Our Memories ❤️</h2>
             <div class="gallery">
-                <img src="art1.jpg" class="gallery-img">
-                <img src="art2.jpg" class="gallery-img">
-                <img src="art3.jpg" class="gallery-img">
-                <img src="art4.jpg" class="gallery-img">
-                <img src="art5.jpg" class="gallery-img">
-                <img src="art6.jpg" class="gallery-img">
+                <img src="art1.jpg" class="gallery-img"><img src="art2.jpg" class="gallery-img">
+                <img src="art3.jpg" class="gallery-img"><img src="art4.jpg" class="gallery-img">
+                <img src="art5.jpg" class="gallery-img"><img src="art6.jpg" class="gallery-img">
             </div>
+        </div>
 
-            <div class="beach-section" id="beachSection">
-                <p class="beach-msg">
-                    "Hey sweetheart, I know you've always dreamed of me proposing to you on a beautiful beach. 🌊<br><br>
-                    I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment.<br><br>
-                    One day very soon, it won't just be a dream—it will be our reality. ❤️"
-                </p>
-                <div class="video-box"><video id="beachVideo" playsinline controls loop><source src="beach.mp4" type="video/mp4"></video></div>
+        <div class="beach-section" id="beachSection">
+            <p class="beach-msg">
+                "Hey sweetheart, I know you've always dreamed of me proposing to you on a beautiful beach. 🌊<br><br>
+                I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment.<br><br>
+                One day very soon, it won't just be a dream—it will be our reality. ❤️"
+            </p>
+            <div class="video-box">
+                <video id="beachVideo" playsinline controls loop><source src="beach.mp4" type="video/mp4"></video>
             </div>
+        </div>
 
-            <div class="btn-container">
-                <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem;">Will you be mine forever?</h2>
-                <div style="margin-top: 20px;">
-                    <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20❤️" class="yes-btn" id="yesBtn">YES! ❤️</a>
-                    <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
-                </div>
+        <div class="btn-container">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem;">Will you be mine forever?</h2>
+            <div style="margin-top: 20px;">
+                <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20❤️" class="yes-btn" id="yesBtn">YES! ❤️</a>
+                <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
             </div>
         </div>
     </div>
@@ -150,40 +160,46 @@
                 scanner.style.display = 'none';
                 document.getElementById('instruction').style.display = 'none';
                 confirmBtn.style.display = 'block';
-            }, 2000);
+            }, 2500);
         }
 
-        function openGiftScreen() {
-            document.getElementById('door-container').style.display = 'none';
-            document.getElementById('gift-screen').style.display = 'flex';
-            setInterval(createHeart, 500);
+        function openDoors() {
+            document.getElementById('leftDoor').style.transform = 'rotateY(-100deg)';
+            document.getElementById('rightDoor').style.transform = 'rotateY(100deg)';
+            confirmBtn.style.display = 'none';
+            document.querySelector('.scanner-gif').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('door-container').style.display = 'none';
+                document.getElementById('gift-screen').style.display = 'flex';
+                setInterval(createHeart, 500);
+            }, 1500);
         }
 
-        function openBox() { 
-            document.getElementById('gift-screen').style.display = 'none'; 
-            document.getElementById('main-content-area').style.display = 'block'; 
-            document.body.style.overflowY = "auto"; 
-            mainVid.play(); 
+        function openBox() {
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('main-content-area').style.display = 'block';
+            document.body.style.overflowY = "auto";
+            mainVid.play();
         }
 
-        function moveNo() { 
-            const noBtn = document.getElementById('noBtn'); const yesBtn = document.getElementById('yesBtn'); 
+        function moveNo() {
+            const noBtn = document.getElementById('noBtn'); const yesBtn = document.getElementById('yesBtn');
             noBtn.style.position = 'fixed';
             noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            yesScale += 0.3; yesBtn.style.transform = `scale(${yesScale})`; 
+            yesScale += 0.3; yesBtn.style.transform = `scale(${yesScale})`;
         }
 
         scanner.addEventListener('mousedown', startScan);
         scanner.addEventListener('touchstart', startScan);
         window.addEventListener('mouseup', () => { clearTimeout(scanTimer); document.getElementById('scanLine').style.display = 'none'; });
 
-        function createHeart() { 
+        function createHeart() {
             const heart = document.createElement('div'); heart.classList.add('floating-heart'); heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw'; heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
             heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
             document.getElementById('heartsBg').appendChild(heart);
-            setTimeout(() => heart.remove(), 5000); 
+            setTimeout(() => heart.remove(), 5000);
         }
     </script>
 </body>
