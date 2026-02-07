@@ -7,31 +7,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0; padding: 0; background-color: #000; color: white;
+            margin: 0; padding: 0; background-color: #fff0f5; color: #d6336c;
             min-height: 100vh; font-family: 'Poppins', sans-serif; overflow-x: hidden;
             user-select: none;
         }
 
-        /* --- STAGE 1: PINK DOOR & SCANNER --- */
+        /* --- BACKGROUND HEARTS --- */
+        .hearts-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+
+        /* --- STAGE 1: PINK DOOR & GLOWING SCANNER --- */
         #door-container {
             position: fixed; width: 100%; height: 100%; z-index: 1000;
             display: flex; justify-content: center; align-items: center;
-            background-color: #ff85a1; transition: all 1.5s ease-in-out;
-            perspective: 1000px;
+            background-color: #ff85a1; perspective: 1000px;
         }
         .door-half {
             position: absolute; width: 50%; height: 100%; background-color: #ff4d6d;
-            border: 2px solid #a41638; transition: transform 1.5s ease-in-out;
+            border: 2px solid #ff85a1; transition: transform 1.5s ease-in-out;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
         }
         .left-door { left: 0; transform-origin: left; }
         .right-door { right: 0; transform-origin: right; }
         
         .scanner-box {
-            position: absolute; width: 120px; height: 140px; 
-            border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 20px;
-            background: rgba(0, 0, 0, 0.3); display: flex;
+            position: absolute; width: 140px; height: 140px; 
+            border: 4px solid #fff; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2); display: flex;
             justify-content: center; align-items: center; overflow: hidden; z-index: 1001;
+            box-shadow: 0 0 20px #fff; cursor: pointer;
         }
+        .fingerprint-icon { font-size: 70px; color: #fff; text-shadow: 0 0 10px #00ffcc; }
         .scan-line {
             position: absolute; top: 0; left: 0; width: 100%; height: 4px;
             background: #00ffcc; box-shadow: 0 0 15px #00ffcc;
@@ -39,73 +47,84 @@
         }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* --- STAGE 2: THE GIFT BOX --- */
+        /* --- STAGE 2: LARGE GIFT BOX & HEARTS --- */
         #gift-screen {
             display: none; height: 100vh; width: 100%; flex-direction: column;
-            justify-content: center; align-items: center; background: #2b0c1e;
+            justify-content: center; align-items: center; background: #fff0f5;
         }
         .box-container {
-            position: relative; width: 250px; height: 250px; cursor: pointer;
-            animation: float 3s ease-in-out infinite;
+            position: relative; width: 280px; height: 280px; cursor: pointer;
+            animation: float 3s ease-in-out infinite; z-index: 5;
         }
         .box-lid {
-            position: absolute; top: 0; width: 100%; height: 60px;
-            background: #ff4d6d; border-radius: 10px 10px 0 0; z-index: 2;
-            transition: 0.8s; border-bottom: 5px solid #a41638;
+            position: absolute; top: 0; width: 100%; height: 70px;
+            background: #e63946; border-radius: 10px 10px 0 0; z-index: 2;
+            transition: 0.8s; border-bottom: 5px solid #a41638; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .box-body {
-            position: absolute; bottom: 0; width: 100%; height: 190px;
-            background: #c9184a; border-radius: 0 0 10px 10px; z-index: 1;
+            position: absolute; bottom: 0; width: 100%; height: 210px;
+            background: #d62828; border-radius: 0 0 10px 10px; z-index: 1;
         }
         .ribbon-text {
-            position: absolute; top: 50%; width: 100%; height: 40px;
-            background: #ffccd5; color: #a41638; display: flex;
+            position: absolute; top: 50%; width: 100%; height: 50px;
+            background: #fff; color: #d62828; display: flex;
             justify-content: center; align-items: center; font-weight: bold;
-            font-size: 0.9rem; transform: translateY(-50%); z-index: 3;
+            font-size: 1.1rem; transform: translateY(-50%); z-index: 3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* --- STAGE 3: FULL SCREEN VIDEO --- */
-        #video-screen { display: none; width: 100%; height: 100vh; position: relative; }
-        .main-vid { width: 100%; height: 100%; object-fit: cover; }
+        /* --- STAGE 3: RESPONSIVE VIDEO --- */
+        #video-screen { display: none; width: 100%; height: 100vh; background: #000; }
+        .main-vid { width: 100%; height: 100%; object-fit: contain; }
 
-        /* --- STAGE 4: PHOTOS & BEACH PROMISE --- */
-        #scroll-content { display: none; padding: 40px 0; text-align: center; }
+        /* --- STAGE 4: SCROLLABLE CONTENT --- */
+        #scroll-content { display: none; padding: 40px 0; text-align: center; background-color: #fff0f5;}
         .gallery {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px; width: 90%; margin: 20px auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px; width: 95%; margin: 20px auto;
         }
-        .gallery-img { width: 100%; border-radius: 15px; border: 3px solid #ff4d6d; }
+        .gallery-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d6d; }
 
         .beach-section {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80');
-            background-size: cover; padding: 60px 20px; margin: 50px 0; border-radius: 20px;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover; padding: 40px 15px; margin: 40px 10px; border-radius: 20px; border: 2px dashed #ff4d6d;
         }
-        .beach-msg { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #fff; max-width: 800px; margin: 0 auto; }
+        .beach-msg { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #d6336c; margin: 0 auto; }
 
-        /* Beach Video Container */
         .beach-video-container {
-            width: 90%; max-width: 700px; margin: 30px auto; border-radius: 20px;
-            overflow: hidden; border: 4px solid #ff4d6d; box-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
+            width: 100%; max-width: 350px; margin: 25px auto; border-radius: 15px;
+            overflow: hidden; border: 3px solid #ff4d6d; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        .beach-vid { width: 100%; display: block; }
+        .beach-vid { width: 100%; height: auto; display: block; }
 
         /* --- BUTTONS --- */
-        .btn-container { padding-bottom: 100px; margin-top: 50px; }
-        .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: transform 0.2s; }
-        .no-btn { padding: 15px 40px; background: white; color: black; border-radius: 50px; border: none; font-weight: bold; }
+        .btn-container { padding: 50px 0 100px; }
+        .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; font-size: 1.2rem; }
+        .no-btn { padding: 15px 40px; background: #fff; color: #d6336c; border-radius: 50px; border: 2px solid #d6336c; font-weight: bold; }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        
+        .floating-heart {
+            position: absolute; color: #ff4d6d; opacity: 0.6; animation: heartFloat linear infinite;
+        }
+        @keyframes heartFloat {
+            0% { transform: translateY(100vh) rotate(0); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="hearts-bg" id="heartsBg"></div>
 
     <div id="door-container">
         <div class="door-half left-door" id="leftDoor"></div>
         <div class="door-half right-door" id="rightDoor"></div>
         <div class="scanner-box" id="scanner">
             <div class="scan-line" id="scanLine"></div>
-            <div class="fingerprint">🖐️</div>
+            <div class="fingerprint-icon">🖐️</div>
         </div>
+        <div style="position:absolute; bottom:20%; color:#fff; font-weight:bold;">IDENTIFICATION REQUIRED</div>
     </div>
 
     <div id="gift-screen">
@@ -115,7 +134,7 @@
                 <div class="ribbon-text">Gaurav Loves Mona</div>
             </div>
         </div>
-        <p style="margin-top: 20px; color: #ffccd5;">Tap to reveal the mystery...</p>
+        <h2 style="margin-top: 30px; font-family: 'Dancing Script';">Tap the gift, Mona...</h2>
     </div>
 
     <div id="video-screen">
@@ -125,7 +144,7 @@
     </div>
 
     <div id="scroll-content">
-        <h2 class="beach-msg" style="margin-bottom: 40px;">Our Memories ❤️</h2>
+        <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem;">Our Memories ❤️</h2>
         <div class="gallery">
             <img src="art1.jpg" class="gallery-img">
             <img src="art2.jpg" class="gallery-img">
@@ -138,22 +157,21 @@
         <div class="beach-section">
             <p class="beach-msg">
                 "Hey sweetheart, I know you've always dreamed of me proposing to you on a beautiful beach. 🌊<br><br>
-                I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment. 
-                I want to be at my absolute best when I finally look into your eyes on that shore. 
+                I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment.<br><br>
                 One day very soon, it won't just be a dream—it will be our reality. ❤️"
             </p>
             
             <div class="beach-video-container">
-                <video id="beachVideo" class="beach-vid" controls loop muted playsinline>
+                <video id="beachVideo" class="beach-vid" loop muted playsinline>
                     <source src="beach.mp4" type="video/mp4">
                 </video>
             </div>
         </div>
 
         <div class="btn-container">
-            <h2 class="beach-msg">So, Mona... Will you be mine forever?</h2>
+            <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem;">Will you be mine forever?</h2>
             <div style="margin-top: 30px;">
-                <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20I%20will%20wait%20for%20our%20beach%20moment!%20🌊❤️" class="yes-btn" id="yesBtn">YES! 💖</a>
+                <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20I%20will%20wait%20for%20our%20beach%20moment!%20🌊❤️" class="yes-btn" id="yesBtn">YES! ❤️</a>
                 <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
             </div>
         </div>
@@ -164,13 +182,26 @@
         let scanTimer;
         let yesScale = 1;
 
+        // Create background hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            document.getElementById('heartsBg').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 400);
+
         // 1. SCANNER & DOOR LOGIC
         function startScan(e) {
             e.preventDefault();
             document.getElementById('scanLine').style.display = 'block';
             scanTimer = setTimeout(() => {
-                document.getElementById('leftDoor').style.transform = 'rotateY(-90deg)';
-                document.getElementById('rightDoor').style.transform = 'rotateY(90deg)';
+                document.getElementById('leftDoor').style.transform = 'rotateY(-100deg)';
+                document.getElementById('rightDoor').style.transform = 'rotateY(100deg)';
                 scanner.style.display = 'none';
                 setTimeout(() => {
                     document.getElementById('door-container').style.opacity = '0';
@@ -178,7 +209,7 @@
                         document.getElementById('door-container').style.display = 'none';
                         document.getElementById('gift-screen').style.display = 'flex';
                     }, 1000);
-                }, 1500);
+                }, 1000);
             }, 2000);
         }
 
@@ -187,7 +218,7 @@
             document.getElementById('scanLine').style.display = 'none';
         }
 
-        // 2. BOX OPENING & VIDEO
+        // 2. BOX OPENING
         function openBox() {
             document.getElementById('gift-screen').style.display = 'none';
             document.getElementById('video-screen').style.display = 'block';
@@ -195,15 +226,14 @@
             vid.play();
             
             vid.onended = () => {
+                document.getElementById('video-screen').style.display = 'none';
                 document.getElementById('scroll-content').style.display = 'block';
                 document.body.style.overflowY = "auto";
-                window.scrollBy({ top: 300, behavior: 'smooth' });
-                // Start playing the beach video when section appears
                 document.getElementById('beachVideo').play();
             };
         }
 
-        // 3. MOVING BUTTON LOGIC
+        // 3. MOVING BUTTON
         function moveNo() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
