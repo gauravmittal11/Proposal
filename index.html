@@ -12,34 +12,25 @@
             user-select: none;
         }
 
-        /* --- BACKGROUND HEARTS --- */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
         }
 
-        /* --- STAGE 1: PINK DOOR & GLOWING SCANNER --- */
+        /* --- STAGE 1: SCANNER & SECURITY GUARD --- */
         #door-container {
             position: fixed; width: 100%; height: 100%; z-index: 1000;
-            display: flex; justify-content: center; align-items: center;
-            background-color: #ff85a1; perspective: 1000px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background-color: #ff85a1; transition: all 1.5s ease-in-out;
         }
-        .door-half {
-            position: absolute; width: 50%; height: 100%; background-color: #ff4d6d;
-            border: 2px solid #ff85a1; transition: transform 1.5s ease-in-out;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
-        }
-        .left-door { left: 0; transform-origin: left; }
-        .right-door { right: 0; transform-origin: right; }
-        
+        .guard-gif { width: 120px; margin-bottom: 20px; border-radius: 50%; }
         .scanner-box {
-            position: absolute; width: 140px; height: 140px; 
+            position: relative; width: 140px; height: 140px; 
             border: 4px solid #fff; border-radius: 50%;
             background: rgba(255, 255, 255, 0.2); display: flex;
-            justify-content: center; align-items: center; overflow: hidden; z-index: 1001;
+            justify-content: center; align-items: center; overflow: hidden;
             box-shadow: 0 0 20px #fff; cursor: pointer;
         }
-        .fingerprint-icon { font-size: 70px; color: #fff; text-shadow: 0 0 10px #00ffcc; }
         .scan-line {
             position: absolute; top: 0; left: 0; width: 100%; height: 4px;
             background: #00ffcc; box-shadow: 0 0 15px #00ffcc;
@@ -47,70 +38,74 @@
         }
         @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* --- STAGE 2: LARGE GIFT BOX & HEARTS --- */
+        /* --- STAGE 2: GIFT BOX & "OPEN IT" --- */
         #gift-screen {
             display: none; height: 100vh; width: 100%; flex-direction: column;
             justify-content: center; align-items: center; background: #fff0f5;
         }
+        .open-it-gif { width: 150px; margin-bottom: 10px; }
         .box-container {
-            position: relative; width: 280px; height: 280px; cursor: pointer;
-            animation: float 3s ease-in-out infinite; z-index: 5;
+            position: relative; width: 250px; height: 250px; cursor: pointer;
+            animation: float 3s ease-in-out infinite;
         }
         .box-lid {
-            position: absolute; top: 0; width: 100%; height: 70px;
+            position: absolute; top: 0; width: 100%; height: 60px;
             background: #e63946; border-radius: 10px 10px 0 0; z-index: 2;
-            transition: 0.8s; border-bottom: 5px solid #a41638; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: 0.8s; border-bottom: 5px solid #a41638;
         }
         .box-body {
-            position: absolute; bottom: 0; width: 100%; height: 210px;
+            position: absolute; bottom: 0; width: 100%; height: 190px;
             background: #d62828; border-radius: 0 0 10px 10px; z-index: 1;
         }
         .ribbon-text {
-            position: absolute; top: 50%; width: 100%; height: 50px;
+            position: absolute; top: 50%; width: 100%; height: 40px;
             background: #fff; color: #d62828; display: flex;
             justify-content: center; align-items: center; font-weight: bold;
-            font-size: 1.1rem; transform: translateY(-50%); z-index: 3;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 1rem; transform: translateY(-50%); z-index: 3;
         }
 
-        /* --- STAGE 3: RESPONSIVE VIDEO --- */
-        #video-screen { display: none; width: 100%; height: 100vh; background: #000; }
-        .main-vid { width: 100%; height: 100%; object-fit: contain; }
+        /* --- STAGE 3: MAIN CONTENT (PERSISTENT) --- */
+        #main-content-area { display: none; }
+        .video-wrapper { 
+            width: 100%; background: #000; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .main-vid { width: 100%; max-height: 80vh; object-fit: contain; }
 
-        /* --- STAGE 4: SCROLLABLE CONTENT --- */
-        #scroll-content { display: none; padding: 40px 0; text-align: center; background-color: #fff0f5;}
+        #scroll-content { padding: 40px 0; text-align: center; position: relative; z-index: 1; }
+        
+        /* Fixed Photo Sizing */
         .gallery {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px; width: 95%; margin: 20px auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; width: 95%; margin: 20px auto;
         }
-        .gallery-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 2px solid #ff4d6d; }
+        .gallery-img { 
+            width: 100%; height: 350px; 
+            object-fit: contain; /* This stops cutting off the top */
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px; border: 2px solid #ff4d6d; 
+        }
 
         .beach-section {
             background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80');
             background-size: cover; padding: 40px 15px; margin: 40px 10px; border-radius: 20px; border: 2px dashed #ff4d6d;
         }
-        .beach-msg { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #d6336c; margin: 0 auto; }
-
         .beach-video-container {
             width: 100%; max-width: 350px; margin: 25px auto; border-radius: 15px;
-            overflow: hidden; border: 3px solid #ff4d6d; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden; border: 3px solid #ff4d6d;
         }
         .beach-vid { width: 100%; height: auto; display: block; }
 
-        /* --- BUTTONS --- */
+        /* Kisses GIF at bottom */
+        .kisses-gif { width: 150px; margin-bottom: 15px; }
+
         .btn-container { padding: 50px 0 100px; }
-        .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; font-size: 1.2rem; }
+        .yes-btn { padding: 15px 40px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; transition: transform 0.2s; }
         .no-btn { padding: 15px 40px; background: #fff; color: #d6336c; border-radius: 50px; border: 2px solid #d6336c; font-weight: bold; }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        
-        .floating-heart {
-            position: absolute; color: #ff4d6d; opacity: 0.6; animation: heartFloat linear infinite;
-        }
-        @keyframes heartFloat {
-            0% { transform: translateY(100vh) rotate(0); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
+        .floating-heart { position: absolute; color: #ff4d6d; opacity: 0.6; animation: heartFloat linear infinite; }
+        @keyframes heartFloat { 0% { transform: translateY(100vh); } 100% { transform: translateY(-10vh); } }
     </style>
 </head>
 <body>
@@ -118,122 +113,105 @@
     <div class="hearts-bg" id="heartsBg"></div>
 
     <div id="door-container">
-        <div class="door-half left-door" id="leftDoor"></div>
-        <div class="door-half right-door" id="rightDoor"></div>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZhcTB4b3Z5bmFhMnhmZm56Zmd4OHByN3R6eG5xZ3ZpdmR1dG56ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/hvS1e2wULILhALifXy/giphy.gif" class="guard-gif">
         <div class="scanner-box" id="scanner">
             <div class="scan-line" id="scanLine"></div>
-            <div class="fingerprint-icon">🖐️</div>
+            <div style="font-size: 60px;">🖐️</div>
         </div>
-        <div style="position:absolute; bottom:20%; color:#fff; font-weight:bold;">IDENTIFICATION REQUIRED</div>
+        <p style="color: white; font-weight: bold; margin-top: 15px;">Mona's Security Check</p>
     </div>
 
     <div id="gift-screen">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1bnh6bXZ4bXZ4bXZ4bXZ4bXZ4bXZ4bXZ4bXZ4bXZ4bXYmY3Q9Zw/3o7TKSjPqcK0pL746M/giphy.gif" class="open-it-gif">
         <div class="box-container" onclick="openBox()">
             <div class="box-lid"></div>
             <div class="box-body">
                 <div class="ribbon-text">Gaurav Loves Mona</div>
             </div>
         </div>
-        <h2 style="margin-top: 30px; font-family: 'Dancing Script';">Tap the gift, Mona...</h2>
     </div>
 
-    <div id="video-screen">
-        <video id="myVideo" class="main-vid" playsinline>
-            <source src="us.mp4" type="video/mp4">
-        </video>
-    </div>
-
-    <div id="scroll-content">
-        <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem;">Our Memories ❤️</h2>
-        <div class="gallery">
-            <img src="art1.jpg" class="gallery-img">
-            <img src="art2.jpg" class="gallery-img">
-            <img src="art3.jpg" class="gallery-img">
-            <img src="art4.jpg" class="gallery-img">
-            <img src="art5.jpg" class="gallery-img">
-            <img src="art6.jpg" class="gallery-img">
+    <div id="main-content-area">
+        <div class="video-wrapper">
+            <video id="myVideo" class="main-vid" playsinline controls loop>
+                <source src="us.mp4" type="video/mp4">
+            </video>
         </div>
 
-        <div class="beach-section">
-            <p class="beach-msg">
-                "Hey sweetheart, I know you've always dreamed of me proposing to you on a beautiful beach. 🌊<br><br>
-                I promise you, as I work hard on my fitness and lose this weight, I am preparing myself for that exact moment.<br><br>
-                One day very soon, it won't just be a dream—it will be our reality. ❤️"
-            </p>
-            
-            <div class="beach-video-container">
-                <video id="beachVideo" class="beach-vid" loop muted playsinline>
-                    <source src="beach.mp4" type="video/mp4">
-                </video>
+        <div id="scroll-content">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem;">Our Memories ❤️</h2>
+            <div class="gallery">
+                <img src="art1.jpg" class="gallery-img">
+                <img src="art2.jpg" class="gallery-img">
+                <img src="art3.jpg" class="gallery-img">
+                <img src="art4.jpg" class="gallery-img">
+                <img src="art5.jpg" class="gallery-img">
+                <img src="art6.jpg" class="gallery-img">
             </div>
-        </div>
 
-        <div class="btn-container">
-            <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem;">Will you be mine forever?</h2>
-            <div style="margin-top: 30px;">
-                <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20I%20will%20wait%20for%20our%20beach%20moment!%20🌊❤️" class="yes-btn" id="yesBtn">YES! ❤️</a>
-                <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
+            <div class="beach-section" id="beachSection">
+                <p style="font-family: 'Dancing Script'; font-size: 1.8rem;">
+                    "One day very soon, it won't just be a dream—it will be our reality on the shore. ❤️"
+                </p>
+                <div class="beach-video-container">
+                    <video id="beachVideo" class="beach-vid" playsinline controls loop>
+                        <source src="beach.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N2ZXZxdG96dXZxdG96dXZxdG96dXZxdG96dXZxdG96dXYmY3Q9cw/l41JWZknLqG9yU0iA/giphy.gif" class="kisses-gif">
+                <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem;">Will you be mine forever?</h2>
+                <div style="margin-top: 30px;">
+                    <a href="https://wa.me/?text=YES!%20I%20love%20you%20Gaurav!%20❤️" class="yes-btn" id="yesBtn">YES! ❤️</a>
+                    <button class="no-btn" id="noBtn" onmouseover="moveNo()">No</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         const scanner = document.getElementById('scanner');
+        const mainVid = document.getElementById('myVideo');
+        const beachVid = document.getElementById('beachVideo');
+        const beachSection = document.getElementById('beachSection');
         let scanTimer;
         let yesScale = 1;
 
-        // Create background hearts
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('floating-heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
-            document.getElementById('heartsBg').appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-        }
-        setInterval(createHeart, 400);
-
-        // 1. SCANNER & DOOR LOGIC
+        // Scanner Action
         function startScan(e) {
             e.preventDefault();
             document.getElementById('scanLine').style.display = 'block';
             scanTimer = setTimeout(() => {
-                document.getElementById('leftDoor').style.transform = 'rotateY(-100deg)';
-                document.getElementById('rightDoor').style.transform = 'rotateY(100deg)';
-                scanner.style.display = 'none';
+                document.getElementById('door-container').style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('door-container').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('door-container').style.display = 'none';
-                        document.getElementById('gift-screen').style.display = 'flex';
-                    }, 1000);
+                    document.getElementById('door-container').style.display = 'none';
+                    document.getElementById('gift-screen').style.display = 'flex';
                 }, 1000);
             }, 2000);
         }
 
-        function stopScan() {
-            clearTimeout(scanTimer);
-            document.getElementById('scanLine').style.display = 'none';
-        }
-
-        // 2. BOX OPENING
+        // Opening Box
         function openBox() {
             document.getElementById('gift-screen').style.display = 'none';
-            document.getElementById('video-screen').style.display = 'block';
-            const vid = document.getElementById('myVideo');
-            vid.play();
-            
-            vid.onended = () => {
-                document.getElementById('video-screen').style.display = 'none';
-                document.getElementById('scroll-content').style.display = 'block';
-                document.body.style.overflowY = "auto";
-                document.getElementById('beachVideo').play();
-            };
+            document.getElementById('main-content-area').style.display = 'block';
+            document.body.style.overflowY = "auto";
+            mainVid.play();
         }
 
-        // 3. MOVING BUTTON
+        // Smart Sound/Mute Swap on Scroll
+        window.addEventListener('scroll', () => {
+            const beachRect = beachSection.getBoundingClientRect();
+            if (beachRect.top < window.innerHeight && beachRect.bottom >= 0) {
+                if (!mainVid.paused) mainVid.pause();
+                if (beachVid.paused) beachVid.play();
+            } else if (beachRect.top > window.innerHeight) {
+                beachVid.pause();
+            }
+        });
+
+        // Moving Button
         function moveNo() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
@@ -246,8 +224,26 @@
 
         scanner.addEventListener('mousedown', startScan);
         scanner.addEventListener('touchstart', startScan);
-        window.addEventListener('mouseup', stopScan);
-        window.addEventListener('touchend', stopScan);
+        window.addEventListener('mouseup', () => {
+            clearTimeout(scanTimer);
+            document.getElementById('scanLine').style.display = 'none';
+        });
+        window.addEventListener('touchend', () => {
+            clearTimeout(scanTimer);
+            document.getElementById('scanLine').style.display = 'none';
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            document.getElementById('heartsBg').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 500);
     </script>
 </body>
 </html>
